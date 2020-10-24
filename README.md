@@ -126,7 +126,7 @@ either when running the container or in a `docker-compose.yml` file.
 * `TIMEOUT_CLIENT` Set the maximum inactivity time on the client side. - default `50s`
 * `TIMEOUT_SERVER` Set the maximum inactivity time on the server side. - default `50s`
 * `TIMEOUT_HTTP_REQUEST` Set the maximum allowed time to wait for a complete HTTP request - default `10s`
-* `TIMEOUT_KEEP_ALIVE` Set the maximum allowed time to wait for a new HTTP request to appear - default `2s`
+* `TIMEOUT_HTTP_KEEP_ALIVE` Set the maximum allowed time to wait for a new HTTP request to appear - default `2s`
 * `TIMEOUT_QUEUE` Set the maximum time to wait in the queue for a connection slot to be free - default `5s`
 * `TIMEOUT_TUNNEL` Set the maximum inactivity time on the client and server side for tunnels. - default `2m`
 * `TIMEOUT_CLIENT_FIN` Set the inactivity timeout on the client side for half-closed connections. - default `1s`

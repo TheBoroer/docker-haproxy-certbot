@@ -37,7 +37,7 @@ defaults
   timeout server {{ TIMEOUT_SERVER | default: "50s" }}
   
   timeout http-request {{ TIMEOUT_HTTP_REQUEST | default: "10s" }}
-  timeout http-keep-alive {{ TIMEOUT_KEEP_ALIVE | default: "2s" }}
+  timeout http-keep-alive {{ TIMEOUT_HTTP_KEEP_ALIVE | default: "2s" }}
   timeout queue {{ TIMEOUT_QUEUE | default: "5s" }}
   timeout tunnel {{ TIMEOUT_TUNNEL | default: "2m" }}
   timeout client-fin {{ TIMEOUT_CLIENT_FIN | default: "1s" }}
