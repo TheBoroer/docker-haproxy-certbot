@@ -57,3 +57,6 @@ COPY templates/haproxy.cfg.p2 /
 # Add startup script
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["haproxy", "-f", "/etc/haproxy/haproxy.cfg"]
