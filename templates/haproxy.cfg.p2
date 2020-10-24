@@ -114,7 +114,3 @@ defaults
 
 listen default
   bind *:4242
-
-
-{{ TEMPORARY }}
-
