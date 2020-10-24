@@ -4,6 +4,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
       ca-certificates \
       python3-pip \
+      ssl-cert \
       cron \
       libnl-utils \
       net-tools \
@@ -20,7 +21,9 @@ RUN apt-get update \
     && sed -i '/cron.*/a local2.*                          \/proc\/1\/fd\/1' /etc/rsyslog.conf \
     && mv /docker-entrypoint.sh /haproxy-entrypoint.sh
 
-
+    # SSL Combined self-signed default haproxy cert
+    RUN touch /etc/ssl/certs/haproxy.pem
+    RUN cat /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/ssl/private/ssl-cert-snakeoil.key > /etc/ssl/certs/haproxy.pem
     
 # Download p2cli dependency
 RUN wget -O /usr/local/bin/p2 \

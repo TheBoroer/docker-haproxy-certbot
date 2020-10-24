@@ -67,7 +67,7 @@ defaults
     
   frontend {{ FRONTEND_NAME | default: "https-frontend" }}
     maxconn {{ FRONTEND_MAXCONN | default: "2000" }}
-    bind *:{{ FRONTEND_HTTPS_PORT | default: "443" }} ssl {{ isEnabledAcceptProxy }} crt /usr/local/etc/haproxy/certs.d ciphers ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM
+    bind *:{{ FRONTEND_HTTPS_PORT | default: "443" }} ssl {{ isEnabledAcceptProxy }} crt /etc/ssl/certs/haproxy.pem crt /usr/local/etc/haproxy/certs.d ciphers ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM
     mode {{ FRONTEND_MODE | default: "http" }}
     http-request add-header X-Forwarded-Proto https
     
