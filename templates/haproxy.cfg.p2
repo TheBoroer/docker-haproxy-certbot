@@ -1,0 +1,97 @@
+#
+# TEMPLATED CONFIGURATION FILE. UPDATED ON EACH RUN.
+#
+
+{% if PROXY_PROTOCOL_ENABLED | upper == "TRUE" %}
+  {% set isEnabledAcceptProxy = "accept-proxy" %}
+{% else %}
+  {% set isEnabledAcceptProxy = "" %}
+{% endif %}
+
+global
+  log {{ LOGGING | default: "127.0.0.1" }} local2 {{ LOG_LEVEL | default: "notice" }}
+  pidfile /run/haproxy.pid
+  daemon
+  ulimit-n 1000000
+
+  # Default SSL material locations
+  ca-base /etc/ssl/certs
+  crt-base /etc/ssl/private
+
+  # Default ciphers to use on SSL-enabled listening sockets.
+  # For more information, see ciphers(1SSL). This list is from:
+  #  https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
+  ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
+  ssl-default-bind-options no-sslv3
+
+defaults
+  log global
+  mode http
+  option httplog
+  option dontlognull
+  
+  timeout connect {{ TIMEOUT_CONNECT | default: "5000" }}
+  timeout client {{ TIMEOUT_CLIENT | default: "50000" }}
+  timeout server {{ TIMEOUT_SERVER | default: "50000" }}
+  
+  errorfile 400 /etc/haproxy/errors/400.http
+  errorfile 403 /etc/haproxy/errors/403.http
+  errorfile 408 /etc/haproxy/errors/408.http
+  errorfile 500 /etc/haproxy/errors/500.http
+  errorfile 502 /etc/haproxy/errors/502.http
+  errorfile 503 /etc/haproxy/errors/503.http
+  errorfile 504 /etc/haproxy/errors/504.http
+
+  listen stats
+    maxconn 2000
+    bind *:{{ STATS_PORT | default: "1936" }}
+    stats {{ STATS_ENABLED | default: "enable" }}
+    stats uri /
+    stats hide-version
+    stats auth {{ STATS_AUTH | default: "admin:admin" }}
+
+  frontend {{ FRONTEND_NAME | default: "http-frontend" }}
+    maxconn {{ FRONTEND_MAXCONN | default: "2000" }}
+    bind *:{{ FRONTEND_PORT | default: "5000" }} {{ isEnabledAcceptProxy }}
+    mode {{ FRONTEND_MODE | default: "http" }}
+    default_backend {{ BACKEND_NAME | default:"http-backend" }}
+
+  backend {{ BACKEND_NAME | default:"http-backend" }}
+    fullconn {{ BACKEND_FULLCONN | default:"200" }}
+    mode {{ BACKEND_MODE | default: "http" }}
+    balance {{ BALANCE | default: "roundrobin" }}
+    option forwardfor
+    http-request set-header X-Forwarded-Port %[dst_port]
+    http-request add-header X-Forwarded-Proto https if { ssl_fc }
+    option httpchk {{ HTTPCHK | default: "HEAD /" }} HTTP/1.1\r\nHost:localhost
+    http-check expect {{ HTTPCHK_EXPECT | default: "status 200" }}
+    default-server inter {{ INTER | default: "2s" }} fastinter {{ FAST_INTER | default: "2s" }} downinter {{ DOWN_INTER | default: "2s" }} fall {{ FALL | default: "2" }} rise {{ RISE | default: "3" }}
+    
+    {% if COOKIES_ENABLED | upper == "TRUE" %}
+    cookie SRV_ID insert
+    {% set cookies_config = "cookie \\\"@@value@@\\\"" %}
+    
+    {% else %}
+    cookie SRV_ID prefix
+    {% set cookies_config = "" %}
+    
+    {% endif %}
+    
+    # List all provided backends
+    {% set backendServers = BACKENDS | split: " " %}
+    {% for backendServer in backendServers %}
+    {% if backendServer != "" %}
+    {% if COOKIES_ENABLED | upper == "TRUE" %}
+    server {{backendServer}} {{backendServer}} cookie "{{backendServer}}" check
+    {% else %}
+    server {{backendServer}} {{backendServer}} check
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+
+listen default
+  bind *:4242
+
+
+{{ TEMPORARY }}
+
