@@ -103,6 +103,8 @@ defaults
     http-check expect {{ HTTPCHECK_EXPECT | default: "status 200" }}
     default-server inter {{ INTER | default: "2s" }} fastinter {{ FAST_INTER | default: "2s" }} downinter {{ DOWN_INTER | default: "2s" }} fall {{ FALL | default: "2" }} rise {{ RISE | default: "3" }}
     
+    {{ BACKEND_CUSTOM }}
+    
     {% if COOKIES_ENABLED | upper == "TRUE" %}
     cookie SRV_ID insert
     {% set cookies_config = "cookie \\\"@@value@@\\\"" %}
