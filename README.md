@@ -109,7 +109,8 @@ either when running the container or in a `docker-compose.yml` file.
 * `STATS_PORT` The port to bind statistics to - default `1936`
 * `STATS_AUTH` The authentication details (written as `user:password` for the statistics page - default `admin:admin`
 * `FRONTEND_NAME` The label of the frontend - default `http-frontend`
-* `FRONTEND_PORT` The port to bind the frontend to - default `5000`
+* `FRONTEND_HTTP_PORT` The port to bind the frontend HTTP to - default `80`
+* `FRONTEND_HTTPS_PORT` The port to bind the frontend HTTPS to - default `443`
 * `FRONTEND_MODE` Frontend mode - default `http`
 * `PROXY_PROTOCOL_ENABLED` The option to enable or disable accepting proxy protocol (`true` stands for enabled, `false` or anything else for disabled) - default `false`
 * `COOKIES_ENABLED` The option to enable or disable cookie-based sessions (`true` stands for enabled, `false` or anything else for disabled) - default `false`

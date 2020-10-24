@@ -50,11 +50,33 @@ defaults
     stats hide-version
     stats auth {{ STATS_AUTH | default: "admin:admin" }}
 
+
   frontend {{ FRONTEND_NAME | default: "http-frontend" }}
     maxconn {{ FRONTEND_MAXCONN | default: "2000" }}
-    bind *:{{ FRONTEND_PORT | default: "5000" }} {{ isEnabledAcceptProxy }}
+    bind *:{{ FRONTEND_HTTP_PORT | default: "80" }} {{ isEnabledAcceptProxy }}
     mode {{ FRONTEND_MODE | default: "http" }}
+    reqadd X-Forwarded-Proto:\ http
+    
+    acl certbot_http_acl path_beg /.well-known/acme-challenge/
+    redirect scheme https if !certbot_http_acl
+    use_backend certbot-backend if certbot_http_acl
+    
     default_backend {{ BACKEND_NAME | default:"http-backend" }}
+    
+    
+  frontend {{ FRONTEND_NAME | default: "https-frontend" }}
+    maxconn {{ FRONTEND_MAXCONN | default: "2000" }}
+    bind *:{{ FRONTEND_HTTPS_PORT | default: "443" }} ssl {{ isEnabledAcceptProxy }} crt /usr/local/etc/haproxy/default.pem crt /usr/local/etc/haproxy/certs.d ciphers ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM
+    mode {{ FRONTEND_MODE | default: "http" }}
+    reqadd X-Forwarded-Proto:\ https
+    
+    default_backend {{ BACKEND_NAME | default:"http-backend" }}
+
+
+
+  backend certbot-backend
+    mode http
+    server certbot-standalone 127.0.0.1:8080
 
   backend {{ BACKEND_NAME | default:"http-backend" }}
     fullconn {{ BACKEND_FULLCONN | default:"200" }}

@@ -46,10 +46,10 @@ COPY scripts/certbot-certonly.sh /usr/bin/certbot-certonly
 COPY scripts/certbot-renew.sh /usr/bin/certbot-renew
 
 # Fix script permissions
-RUN chmod +x /usr/bin/haproxy-refresh \
-             /usr/bin/haproxy-restart \
-             /usr/bin/certbot-certonly \
-             /usr/bin/certbot-renew
+RUN chmod +x /usr/local/bin/haproxy-refresh \
+             /usr/local/bin/haproxy-restart \
+             /usr/local/bin/certbot-certonly \
+             /usr/local/bin/certbot-renew
 
 # Copy templates
 COPY templates/haproxy.cfg.p2 /
