@@ -125,8 +125,8 @@ either when running the container or in a `docker-compose.yml` file.
 * `TIMEOUT_CONNECT` the maximum time to wait for a connection attempt to a VPS to succeed. Default `5000` ms
 * `TIMEOUT_CLIENT` timeouts apply when the client is expected to acknowledge or send data during the TCP process. Default `50000` ms
 * `TIMEOUT_SERVER` timeouts apply when the server is expected to acknowledge or send data during the TCP process. Default `50000` ms
-* `HTTPCHK` The HTTP method and uri used to check on the servers health - default `HEAD /`
-* `HTTPCHK_EXPECT` The HTTP check option's expect rule - default `status 200`
+* `HTTPCHECK` The HTTP method and uri used to check on the servers health - default `meth HEAD uri / ver HTTP/1.1`
+* `HTTPCHECK_EXPECT` The HTTP check option's expect rule - default `status 200`
 * `INTER` parameter sets the interval between two consecutive health checks. If not specified, the default value is `2s`
 * `FAST_INTER` parameter sets the interval between two consecutive health checks when the server is any of the transition state (read above): UP - transitionally DOWN or DOWN - transitionally UP. If not set, then `INTER` is used.
 * `DOWN_INTER` parameter sets the interval between two consecutive health checks when the server is in the DOWN state. If not set, then `INTER` is used.

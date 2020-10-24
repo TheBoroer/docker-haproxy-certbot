@@ -88,8 +88,9 @@ defaults
     option forwardfor
     http-request set-header X-Forwarded-Port %[dst_port]
     http-request add-header X-Forwarded-Proto https if { ssl_fc }
-    http-check send {{ HTTPCHK | default: "HEAD /" }} HTTP/1.1
-    http-check expect {{ HTTPCHK_EXPECT | default: "status 200" }}
+    option httpchk
+    http-check send {{ HTTPCHECK | default: "meth HEAD uri / ver HTTP/1.1" }}
+    http-check expect {{ HTTPCHECK_EXPECT | default: "status 200" }}
     default-server inter {{ INTER | default: "2s" }} fastinter {{ FAST_INTER | default: "2s" }} downinter {{ DOWN_INTER | default: "2s" }} fall {{ FALL | default: "2" }} rise {{ RISE | default: "3" }}
     
     {% if COOKIES_ENABLED | upper == "TRUE" %}
