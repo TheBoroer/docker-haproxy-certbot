@@ -71,7 +71,9 @@ defaults
     http-request add-header X-Forwarded-Proto http
     
     acl certbot_http_acl path_beg /.well-known/acme-challenge/
+    {% if REDIRECT_TO_HTTPS | upper == "TRUE" %}
     redirect scheme https if !certbot_http_acl
+    {% endif %}
     use_backend certbot-backend if certbot_http_acl
     
     default_backend {{ BACKEND_NAME | default:"http-backend" }}

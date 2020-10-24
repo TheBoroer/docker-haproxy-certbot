@@ -111,6 +111,7 @@ either when running the container or in a `docker-compose.yml` file.
 * `FRONTEND_NAME` The label of the frontend - default `http-frontend`
 * `FRONTEND_HTTP_PORT` The port to bind the frontend HTTP to - default `80`
 * `FRONTEND_HTTPS_PORT` The port to bind the frontend HTTPS to - default `443`
+* `REDIRECT_TO_HTTPS` Setting to redirect HTTP traffic to HTTPS - default `false`
 * `FRONTEND_MODE` Frontend mode - default `http`
 * `PROXY_PROTOCOL_ENABLED` The option to enable or disable accepting proxy protocol (`true` stands for enabled, `false` or anything else for disabled) - default `false`
 * `COOKIES_ENABLED` The option to enable or disable cookie-based sessions (`true` stands for enabled, `false` or anything else for disabled) - default `false`
