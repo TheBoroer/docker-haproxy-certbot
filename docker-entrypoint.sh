@@ -19,6 +19,11 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
 fi
 
 
+if [ ! -f /etc/letsencrypt/cli.ini ]; then
+  cp /letsencrypt-cli.ini /etc/letsencrypt/cli.ini
+fi
+
+
 #start logging
 service rsyslog restart
 

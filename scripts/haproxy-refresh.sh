@@ -7,8 +7,10 @@ DOMAINS=$(ls ${LE_DIR})
 # update certs for HA Proxy
 for DOMAIN in ${DOMAINS}
 do
- cat ${LE_DIR}/${DOMAIN}/fullchain.pem ${LE_DIR}/${DOMAIN}/privkey.pem > ${HA_PROXY_DIR}/certs.d/${DOMAIN}.pem
+  cat ${LE_DIR}/${DOMAIN}/fullchain.pem ${LE_DIR}/${DOMAIN}/privkey.pem > ${HA_DIR}/${DOMAIN}.pem
+  echo -e "set ssl cert ${HA_DIR}/${DOMAIN}.pem <<\n$(cat ${HA_DIR}/${DOMAIN}.pem)\n" | socat stdio /var/run/haproxy
+  echo -e "commit ssl cert ${HA_DIR}/${DOMAIN}.pem" | socat stdio /var/run/haproxy
 done
 
 # restart haproxy
-exec /usr/bin/haproxy-restart
+exec /usr/local/bin/haproxy-restart

@@ -13,7 +13,9 @@ global
   pidfile /run/haproxy.pid
   daemon
   ulimit-n 1000000
-
+  
+  stats socket /var/run/haproxy mode 600 level admin
+  
   # Default SSL material locations
   ca-base /etc/ssl/certs
   crt-base /etc/ssl/private
@@ -86,7 +88,7 @@ defaults
     option forwardfor
     http-request set-header X-Forwarded-Port %[dst_port]
     http-request add-header X-Forwarded-Proto https if { ssl_fc }
-    option httpchk {{ HTTPCHK | default: "HEAD /" }} HTTP/1.1\r\nHost:localhost
+    http-check send {{ HTTPCHK | default: "HEAD /" }} HTTP/1.1
     http-check expect {{ HTTPCHK_EXPECT | default: "status 200" }}
     default-server inter {{ INTER | default: "2s" }} fastinter {{ FAST_INTER | default: "2s" }} downinter {{ DOWN_INTER | default: "2s" }} fall {{ FALL | default: "2" }} rise {{ RISE | default: "3" }}
     
@@ -114,3 +116,4 @@ defaults
 
 listen default
   bind *:4242
+
