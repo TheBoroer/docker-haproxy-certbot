@@ -40,10 +40,10 @@ COPY crons/certbot.cron /certbot.cron
 COPY configs/letsencrypt-cli.ini /etc/letsencrypt/cli.ini
 
 # Setup helper scripts
-COPY scripts/haproxy-refresh.sh /usr/bin/haproxy-refresh
-COPY scripts/haproxy-restart.sh /usr/bin/haproxy-restart
-COPY scripts/certbot-certonly.sh /usr/bin/certbot-certonly
-COPY scripts/certbot-renew.sh /usr/bin/certbot-renew
+COPY scripts/haproxy-refresh.sh /usr/local/bin/haproxy-refresh
+COPY scripts/haproxy-restart.sh /usr/local/bin/haproxy-restart
+COPY scripts/certbot-certonly.sh /usr/local/bin/certbot-certonly
+COPY scripts/certbot-renew.sh /usr/local/bin/certbot-renew
 
 # Fix script permissions
 RUN chmod +x /usr/local/bin/haproxy-refresh \
