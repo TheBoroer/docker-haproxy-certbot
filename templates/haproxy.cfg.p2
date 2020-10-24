@@ -3,9 +3,11 @@
 #
 
 {% if PROXY_PROTOCOL_ENABLED | upper == "TRUE" %}
-  {% set isEnabledAcceptProxy = "accept-proxy" %}
+  {% set shouldAcceptProxy = "accept-proxy" %}
+  {% set shouldSendProxy = "send-proxy" %}
 {% else %}
-  {% set isEnabledAcceptProxy = "" %}
+  {% set shouldAcceptProxy = "" %}
+  {% set shouldSendProxy = "" %}
 {% endif %}
 
 global
@@ -64,7 +66,7 @@ defaults
 
   frontend {{ FRONTEND_NAME | default: "http-frontend" }}
     maxconn {{ FRONTEND_MAXCONN | default: "2000" }}
-    bind *:{{ FRONTEND_HTTP_PORT | default: "80" }} {{ isEnabledAcceptProxy }}
+    bind *:{{ FRONTEND_HTTP_PORT | default: "80" }} {{ shouldAcceptProxy }}
     mode {{ FRONTEND_MODE | default: "http" }}
     http-request add-header X-Forwarded-Proto http
     
@@ -77,7 +79,7 @@ defaults
     
   frontend {{ FRONTEND_NAME | default: "https-frontend" }}
     maxconn {{ FRONTEND_MAXCONN | default: "2000" }}
-    bind *:{{ FRONTEND_HTTPS_PORT | default: "443" }} ssl {{ isEnabledAcceptProxy }} crt /etc/ssl/certs/haproxy.pem crt /usr/local/etc/haproxy/certs.d ciphers ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM
+    bind *:{{ FRONTEND_HTTPS_PORT | default: "443" }} ssl {{ shouldAcceptProxy }} crt /etc/ssl/certs/haproxy.pem crt /usr/local/etc/haproxy/certs.d ciphers ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM
     mode {{ FRONTEND_MODE | default: "http" }}
     http-request add-header X-Forwarded-Proto https
     
@@ -116,7 +118,7 @@ defaults
     {% for backendServer in backendServers %}
     {% if backendServer != "" %}
     {% if COOKIES_ENABLED | upper == "TRUE" %}
-    server {{backendServer}} {{backendServer}} cookie "{{backendServer}}" check
+    server {{backendServer}} {{backendServer}} cookie "{{backendServer}}" check {{ shouldSendProxy }}
     {% else %}
     server {{backendServer}} {{backendServer}} check
     {% endif %}
