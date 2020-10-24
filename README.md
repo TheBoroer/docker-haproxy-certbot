@@ -122,9 +122,15 @@ either when running the container or in a `docker-compose.yml` file.
 * `SERVICE_NAMES` An optional prefix for services to be included when discovering services separated by space. - by default it is not set
 * `LOGGING` Override logging ip address:port - default is udp `127.0.0.1:514` inside container
 * `LOG_LEVEL` Set haproxy log level, default is `notice` ( only send important events ). Can be: `emerg`,`alert`,`crit`,`err`,`warning`,`notice`,`info`,`debug`
-* `TIMEOUT_CONNECT` the maximum time to wait for a connection attempt to a VPS to succeed. Default `5000` ms
-* `TIMEOUT_CLIENT` timeouts apply when the client is expected to acknowledge or send data during the TCP process. Default `50000` ms
-* `TIMEOUT_SERVER` timeouts apply when the server is expected to acknowledge or send data during the TCP process. Default `50000` ms
+* `TIMEOUT_CONNECT` Set the maximum time to wait for a connection attempt to a server to succeed. - default `5s`
+* `TIMEOUT_CLIENT` Set the maximum inactivity time on the client side. - default `50s`
+* `TIMEOUT_SERVER` Set the maximum inactivity time on the server side. - default `50s`
+* `TIMEOUT_HTTP_REQUEST` Set the maximum allowed time to wait for a complete HTTP request - default `10s`
+* `TIMEOUT_KEEP_ALIVE` Set the maximum allowed time to wait for a new HTTP request to appear - default `2s`
+* `TIMEOUT_QUEUE` Set the maximum time to wait in the queue for a connection slot to be free - default `5s`
+* `TIMEOUT_TUNNEL` Set the maximum inactivity time on the client and server side for tunnels. - default `2m`
+* `TIMEOUT_CLIENT_FIN` Set the inactivity timeout on the client side for half-closed connections. - default `1s`
+* `TIMEOUT_SERVER_FIN` Set the inactivity timeout on the server side for half-closed connections. - default `1s`
 * `HTTPCHECK` The HTTP method and uri used to check on the servers health - default `meth HEAD uri / ver HTTP/1.1`
 * `HTTPCHECK_EXPECT` The HTTP check option's expect rule - default `status 200`
 * `INTER` parameter sets the interval between two consecutive health checks. If not specified, the default value is `2s`

@@ -32,9 +32,17 @@ defaults
   option httplog
   option dontlognull
   
-  timeout connect {{ TIMEOUT_CONNECT | default: "5000" }}
-  timeout client {{ TIMEOUT_CLIENT | default: "50000" }}
-  timeout server {{ TIMEOUT_SERVER | default: "50000" }}
+  timeout connect {{ TIMEOUT_CONNECT | default: "5s" }}
+  timeout client {{ TIMEOUT_CLIENT | default: "50s" }}
+  timeout server {{ TIMEOUT_SERVER | default: "50s" }}
+  
+  timeout http-request {{ TIMEOUT_HTTP_REQUEST | default: "10s" }}
+  timeout http-keep-alive {{ TIMEOUT_KEEP_ALIVE | default: "2s" }}
+  timeout queue {{ TIMEOUT_QUEUE | default: "5s" }}
+  timeout tunnel {{ TIMEOUT_TUNNEL | default: "2m" }}
+  timeout client-fin {{ TIMEOUT_CLIENT_FIN | default: "1s" }}
+  timeout server-fin {{ TIMEOUT_SERVER_FIN | default: "1s" }}
+  
   
   errorfile 400 /etc/haproxy/errors/400.http
   errorfile 403 /etc/haproxy/errors/403.http
