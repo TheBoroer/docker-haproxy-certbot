@@ -21,6 +21,8 @@ global
   # Default SSL material locations
   ca-base /etc/ssl/certs
   crt-base /etc/ssl/private
+  
+  tune.ssl.default-dh-param 2048
 
   # Default ciphers to use on SSL-enabled listening sockets.
   # For more information, see ciphers(1SSL). This list is from:
@@ -77,6 +79,7 @@ frontend {{ FRONTEND_NAME | default: "http-frontend" }}
   use_backend certbot-backend if certbot_http_acl
   
   default_backend {{ BACKEND_NAME | default:"http-backend" }}
+  {{ FRONTEND_OPTIONS }}
   
   
 frontend {{ FRONTEND_NAME | default: "https-frontend" }}
@@ -86,7 +89,7 @@ frontend {{ FRONTEND_NAME | default: "https-frontend" }}
   http-request add-header X-Forwarded-Proto https
   
   default_backend {{ BACKEND_NAME | default:"http-backend" }}
-
+  {{ FRONTEND_OPTIONS }}
 
 
 backend certbot-backend
@@ -105,7 +108,13 @@ backend {{ BACKEND_NAME | default:"http-backend" }}
   http-check expect {{ HTTPCHECK_EXPECT | default: "status 200" }}
   default-server inter {{ INTER | default: "2s" }} fastinter {{ FAST_INTER | default: "2s" }} downinter {{ DOWN_INTER | default: "2s" }} fall {{ FALL | default: "2" }} rise {{ RISE | default: "3" }}
   
-  {{ BACKEND_CUSTOM }}
+  http-reuse {{ BACKEND_HTTP_REUSE | default: "safe" }}
+  
+  {% if BACKEND_HTTP_NO_DELAY | upper == "TRUE" %}
+  option http-no-delay
+  {% endif %}
+  
+  {{ BACKEND_OPTIONS }}
   
   {% if COOKIES_ENABLED | upper == "TRUE" %}
   cookie SRV_ID insert
