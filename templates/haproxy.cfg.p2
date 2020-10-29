@@ -56,7 +56,7 @@ defaults
   errorfile 503 /etc/haproxy/errors/503.http
   errorfile 504 /etc/haproxy/errors/504.http
 
-resolvers dns
+resolvers mydns
   parse-resolv-conf
   hold valid {{ DNS_HOLD_VALID | default: "10s" }}
 
@@ -135,9 +135,9 @@ backend {{ BACKEND_NAME | default:"http-backend" }}
   {% for backendServer in backendServers %}
   {% if backendServer != "" %}
   {% if COOKIES_ENABLED | upper == "TRUE" %}
-  server {{backendServer}} {{backendServer}} cookie "{{backendServer}}" check {{ shouldSendProxy }}
+  server {{backendServer}} {{backendServer}} cookie "{{backendServer}}" check {{ shouldSendProxy }} resolvers mydns init-addr none
   {% else %}
-  server {{backendServer}} {{backendServer}} check
+  server {{backendServer}} {{backendServer}} check resolvers mydns init-addr none
   {% endif %}
   {% endif %}
   {% endfor %}
