@@ -106,6 +106,7 @@ HAProxy can be configured by modifying the following env variables,
 either when running the container or in a `docker-compose.yml` file.
 
 * `CERTBOT_ENABLED` The option to enable or disable running the certbot for generating and configuring automatic Let's Encrypt SSL certificates - default `false`
+* `CERTBOT_HOSTNAME` Hostname to request a certificate for. Supports multiple hostnames separated by a single space - default: ``
 * `STATS_PORT` The port to bind statistics to - default `1936`
 * `STATS_AUTH` The authentication details (written as `user:password` for the statistics page - default `admin:admin`
 * `FRONTEND_NAME` The label of the frontend - default `http-frontend`
@@ -113,6 +114,7 @@ either when running the container or in a `docker-compose.yml` file.
 * `FRONTEND_HTTPS_PORT` The port to bind the frontend HTTPS to - default `443`
 * `REDIRECT_TO_HTTPS` Setting to redirect HTTP traffic to HTTPS - default `false`
 * `FRONTEND_MODE` Frontend mode - default `http`
+* `DNS_HOLD_VALID` Time period to cache last DNS resolution for before needing to do another dns fetch - default `10s`
 * `PROXY_PROTOCOL_ENABLED` The option to enable or disable accepting proxy protocol (`true` stands for enabled, `false` or anything else for disabled) - default `false`
 * `COOKIES_ENABLED` The option to enable or disable cookie-based sessions (`true` stands for enabled, `false` or anything else for disabled) - default `false`
 * `BACKEND_NAME` The label of the backend - default `http-backend`

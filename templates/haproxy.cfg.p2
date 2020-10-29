@@ -56,6 +56,10 @@ defaults
   errorfile 503 /etc/haproxy/errors/503.http
   errorfile 504 /etc/haproxy/errors/504.http
 
+resolvers dns
+  parse-resolv-conf
+  hold valid {{ DNS_HOLD_VALID | default: "10s" }}
+
 listen stats
   maxconn 2000
   bind *:{{ STATS_PORT | default: "1936" }}
