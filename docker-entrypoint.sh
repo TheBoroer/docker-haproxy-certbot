@@ -6,9 +6,35 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
   # Generate config from env vars
   p2 -t /haproxy.cfg.p2 > /etc/haproxy/haproxy.cfg
   
+  if [ ! -f /etc/letsencrypt/cli.ini ]; then
+    cp /letsencrypt-cli.ini /etc/letsencrypt/cli.ini
+  fi
+  
   if [ ! -z "$CERTBOT_ENABLED" ]; then
-    # Add certbot to cron
-    crontab /certbot.cron
+    if [ -z "$CERTBOT_EMAIL" ]; then
+      echo "WARNING: CERTBOT_EMAIL is required and cannot be null or empty."
+    
+    else  
+      if [ -z "$CERTBOT_HOSTNAME" ]; then
+        echo "WARNING: CERTBOT_HOSTNAME is required and cannot be null or an empty string."
+      else
+        IFS=' '
+        read -r -a hostnameList <<< "$CERTBOT_HOSTNAME"
+        
+        certbotArgs=()
+        for hostname in "${hostnameList[@]}"; do
+          certbotArgs+=("--domain $hostname")
+        done
+        certbotArgs+=("--email $CERTBOT_EMAIL")
+        
+        # Run certbot once to setup domains that already didn't exist
+        echo "Running Certbot Command: certbot-certonly ${certbotArgs[*]}"
+        certbot-certonly "${certbotArgs[*]}"
+        
+        # Add certbot to cron
+        crontab /certbot.cron
+      fi
+    fi
   else
     # Add crontab
     crontab /var/crontab.txt
@@ -16,11 +42,6 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
   
   chmod 600 /etc/crontab
   
-fi
-
-
-if [ ! -f /etc/letsencrypt/cli.ini ]; then
-  cp /letsencrypt-cli.ini /etc/letsencrypt/cli.ini
 fi
 
 

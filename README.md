@@ -106,6 +106,7 @@ HAProxy can be configured by modifying the following env variables,
 either when running the container or in a `docker-compose.yml` file.
 
 * `CERTBOT_ENABLED` The option to enable or disable running the certbot for generating and configuring automatic Let's Encrypt SSL certificates - default `false`
+* `CERTBOT_EMAIL` Required Email for expiry and other email notifications from letsencrypt - default ``
 * `CERTBOT_HOSTNAME` Hostname to request a certificate for. Supports multiple hostnames separated by a single space - default: ``
 * `STATS_PORT` The port to bind statistics to - default `1936`
 * `STATS_AUTH` The authentication details (written as `user:password` for the statistics page - default `admin:admin`
