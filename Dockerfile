@@ -9,6 +9,8 @@ RUN apt-get update \
       libnl-utils \
       net-tools \
       iptables \
+      socat \
+      nano \
       rsyslog \
       wget \
     && apt-get clean \

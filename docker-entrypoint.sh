@@ -21,15 +21,16 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
         IFS=' '
         read -r -a hostnameList <<< "$CERTBOT_HOSTNAME"
         
-        certbotArgs=()
+        # certbotArgs=()    # Uncomment for SAN
         for hostname in "${hostnameList[@]}"; do
-          certbotArgs+=("--domain $hostname")
+          #certbotArgs+=("--domain $hostname")    # Uncomment for SAN
+          certbot-cert --domain ${hostname} --email ${CERTBOT_EMAIL}
         done
-        certbotArgs+=("--email $CERTBOT_EMAIL")
+        #certbotArgs+=("--email $CERTBOT_EMAIL")    # Uncomment for SAN
         
-        # Run certbot once to setup domains that already didn't exist
-        echo "Running Certbot Command: certbot-certonly ${certbotArgs[*]}"
-        certbot-certonly "${certbotArgs[*]}"
+        # Run certbot once to get a SAN cert for all domains
+        #echo "Running Certbot Command: cer cetbot-certonly ${certbotArgs[*]}"    # Uncomment for SAN
+        #certbot-certonly ${certbotArgs[*]}   # Uncomment for SAN
         
         # Add certbot to cron
         crontab /certbot.cron
