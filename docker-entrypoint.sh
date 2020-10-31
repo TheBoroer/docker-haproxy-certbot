@@ -18,7 +18,7 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
       if [ -z "$CERTBOT_HOSTNAME" ]; then
         echo "WARNING: CERTBOT_HOSTNAME is required and cannot be null or an empty string."
       else
-        IFS=' '
+        # IFS=' '
         read -r -a hostnameList <<< "$CERTBOT_HOSTNAME"
         
         for hostname in "${hostnameList[@]}"; do

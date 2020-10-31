@@ -107,7 +107,7 @@ either when running the container or in a `docker-compose.yml` file.
 
 * `CERTBOT_ENABLED` The option to enable or disable running the certbot for generating and configuring automatic Let's Encrypt SSL certificates - default `false`
 * `CERTBOT_EMAIL` Required Email for expiry and other email notifications from letsencrypt - default ``
-* `CERTBOT_HOSTNAME` Hostname to request a certificate for. Supports multiple hostnames separated by a single space - default: ``
+* `CERTBOT_HOSTNAME` Hostname to request a certificate for. Supports multiple hostnames separated by a single space, tab or new line - default: ``
 * `STATS_PORT` The port to bind statistics to - default `1936`
 * `STATS_AUTH` The authentication details (written as `user:password` for the statistics page - default `admin:admin`
 * `FRONTEND_NAME` The label of the frontend - default `http-frontend`
@@ -119,7 +119,7 @@ either when running the container or in a `docker-compose.yml` file.
 * `PROXY_PROTOCOL_ENABLED` The option to enable or disable accepting proxy protocol (`true` stands for enabled, `false` or anything else for disabled) - default `false`
 * `COOKIES_ENABLED` The option to enable or disable cookie-based sessions (`true` stands for enabled, `false` or anything else for disabled) - default `false`
 * `BACKEND_NAME` The label of the backend - default `http-backend`
-* `BACKENDS` The list of `server_ip:server_listening_port` to be load-balanced by HAProxy, separated by space - by default it is not set
+* `BACKENDS` The list of `server_ip:server_listening_port` to be load-balanced by HAProxy, separated by a single space - by default it is not set
 * `BACKENDS_PORT` Port to use when `BACKENDS` are specified without port - by default `80`
 * `BACKENDS_MODE` Backends mode - default `http`
 * `BACKEND_HTTP_REUSE` - default `safe`
