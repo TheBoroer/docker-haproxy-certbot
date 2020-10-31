@@ -25,7 +25,7 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
         for hostname in "${hostnameList[@]}"; do
           #certbotArgs+=("--domain $hostname")    # Uncomment for SAN
           echo "Running Certbot Command: certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}"
-          certbot-cert --domain ${hostname} --email ${CERTBOT_EMAIL}
+          certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}
         done
         #certbotArgs+=("--email $CERTBOT_EMAIL")    # Uncomment for SAN
         
