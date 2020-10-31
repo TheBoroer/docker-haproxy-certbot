@@ -26,6 +26,8 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
           #certbotArgs+=("--domain $hostname")    # Uncomment for SAN
           echo "Running Certbot Command: certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}"
           certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}
+          echo "Waiting 1 second..."
+          sleep 1
         done
         #certbotArgs+=("--email $CERTBOT_EMAIL")    # Uncomment for SAN
         
