@@ -18,10 +18,7 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
       if [ -z "$CERTBOT_HOSTNAME" ]; then
         echo "WARNING: CERTBOT_HOSTNAME is required and cannot be null or an empty string."
       else
-        # IFS=' '
-        read -r -a hostnameList <<< "$CERTBOT_HOSTNAME"
-        
-        for hostname in "${hostnameList[@]}"; do
+        for hostname in $CERTBOT_HOSTNAME; do
           echo "Queued to run in 10 seconds: certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}"
           
           # wait 10 seconds then run certbot (enough time for haproxy to startup)
