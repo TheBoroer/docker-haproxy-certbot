@@ -23,8 +23,9 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
           
           # wait 10 seconds then run certbot (enough time for haproxy to startup)
           sleep 10 && certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL} && haproxy-refresh &
-          # wait 2 seconds before queuing another certbot instance
-          sleep 2
+          # wait 10 seconds before queuing another certbot instance
+          sleep 10
+          # TODO: instead of sleeping, chain all the certbot cli commands to run back to back
         done
         
         # Add certbot to cron
