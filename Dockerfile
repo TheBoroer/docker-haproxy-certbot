@@ -41,9 +41,10 @@ RUN apt-get update \
 # Setup Certbot
 RUN mkdir -p /etc/haproxy/certs.d
 RUN mkdir -p /etc/letsencrypt
-COPY crons/certbot.cron /certbot.cron
 COPY configs/letsencrypt-cli.ini /etc/letsencrypt/cli.ini
 COPY configs/letsencrypt-cli.ini /letsencrypt-cli.ini
+COPY crons/certbot.cron /etc/cron.d/certbot
+RUN ln -s /etc/cron.d/certbot /certbot.cron
 
 # Setup helper scripts
 COPY scripts/haproxy-refresh.sh /usr/local/bin/haproxy-refresh
