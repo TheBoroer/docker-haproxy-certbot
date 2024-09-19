@@ -1,4 +1,4 @@
-FROM haproxy:2.6.19
+FROM haproxy:2.6
 
 USER root
 
