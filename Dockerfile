@@ -1,19 +1,22 @@
 FROM haproxy:2.9.10
 
+USER root
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-      ca-certificates \
-      python3-pip \
-      ssl-cert \
-      cron \
-      libnl-utils \
-      net-tools \
-      iptables \
-      socat \
-      nano \
-      rsyslog \
-      wget \
-    && apt-get clean \
+    ca-certificates \
+    python3-pip \
+    ssl-cert \
+    cron \
+    libnl-utils \
+    net-tools \
+    iptables \
+    socat \
+    nano \
+    rsyslog \
+    wget
+
+RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /usr/local/etc/haproxy /etc/haproxy \
     && sed -i '/#cron./c\cron.*                          \/proc\/1\/fd\/1'  /etc/rsyslog.conf \
@@ -21,12 +24,12 @@ RUN apt-get update \
     && sed -i '/#$UDPServerRun/c\$UDPServerRun 514'  /etc/rsyslog.conf \
     && sed -i '/$UDPServerRun 514/a $UDPServerAddress 127.0.0.1' /etc/rsyslog.conf \
     && sed -i '/cron.*/a local2.*                          \/proc\/1\/fd\/1' /etc/rsyslog.conf \
-    && mv /docker-entrypoint.sh /haproxy-entrypoint.sh
+    && mv /usr/local/bin/docker-entrypoint.sh /haproxy-entrypoint.sh
 
-    # SSL Combined self-signed default haproxy cert
-    RUN touch /etc/ssl/certs/haproxy.pem
-    RUN cat /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/ssl/private/ssl-cert-snakeoil.key > /etc/ssl/certs/haproxy.pem
-    
+# SSL Combined self-signed default haproxy cert
+RUN touch /etc/ssl/certs/haproxy.pem
+RUN cat /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/ssl/private/ssl-cert-snakeoil.key > /etc/ssl/certs/haproxy.pem
+
 # Download p2cli dependency
 RUN wget -O /usr/local/bin/p2 \
     https://github.com/wrouesnel/p2cli/releases/download/r5/p2 && \
@@ -54,9 +57,9 @@ COPY scripts/certbot-renew.sh /usr/local/bin/certbot-renew
 
 # Fix script permissions
 RUN chmod +x /usr/local/bin/haproxy-refresh \
-             /usr/local/bin/haproxy-restart \
-             /usr/local/bin/certbot-certonly \
-             /usr/local/bin/certbot-renew
+    /usr/local/bin/haproxy-restart \
+    /usr/local/bin/certbot-certonly \
+    /usr/local/bin/certbot-renew
 
 # Copy templates
 COPY templates/haproxy.cfg.p2 /
