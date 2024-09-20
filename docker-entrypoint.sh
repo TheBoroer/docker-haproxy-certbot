@@ -10,10 +10,10 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
   cp /letsencrypt-cli.ini /etc/letsencrypt/cli.ini
 
   # symlink libnl-3 to libnl
-  if [ ! -e /usr/lib/x86_64-linux-gnu/libnl/cli/qdisc/plug.so ] && [ -e /usr/lib/x86_64-linux-gnu/libnl-3/cli/qdisc/plug.so ]; then
-    mkdir /usr/lib/x86_64-linux-gnu/libnl/
-    ln -s /usr/lib/x86_64-linux-gnu/libnl-3/* /usr/lib/x86_64-linux-gnu/libnl/
-  fi
+  # if [ ! -e /usr/lib/x86_64-linux-gnu/libnl/cli/qdisc/plug.so ] && [ -e /usr/lib/x86_64-linux-gnu/libnl-3/cli/qdisc/plug.so ]; then
+  #   mkdir /usr/lib/x86_64-linux-gnu/libnl/
+  #   ln -s /usr/lib/x86_64-linux-gnu/libnl-3/* /usr/lib/x86_64-linux-gnu/libnl/
+  # fi
 
   if [ ! -z "$CERTBOT_ENABLED" ]; then
     if [ -z "$CERTBOT_EMAIL" ]; then
