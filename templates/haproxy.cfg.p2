@@ -15,7 +15,7 @@ global
   pidfile /run/haproxy.pid
   daemon
   ulimit-n 1000000
-  maxconn 1000000
+  maxconn 100000
   
   stats socket /var/run/haproxy mode 600 level admin
   
