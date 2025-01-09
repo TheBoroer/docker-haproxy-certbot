@@ -1,0 +1,22 @@
+name: default
+
+kind: pipeline
+
+steps:
+  - name: build-and-push
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: dockerhub_username
+      password:
+        from_secret: dockerhub_password
+      repo: boro/haproxy-certbot
+      tags:
+        - ${DRONE_BRANCH}
+      cache_from:
+        - "boro/haproxy-certbot:${DRONE_BRANCH}"
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
