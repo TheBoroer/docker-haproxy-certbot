@@ -4,10 +4,12 @@
 #
 
 {% set shouldAcceptProxy = "" %}
-{% if PROXY_PROTOCOL_ENABLED | upper == "TRUE" %}
-  {% set shouldSendProxy = "send-proxy-v2" %}
+{% if PROXY_PROTOCOL_V1 | upper == "TRUE" %}
+{% set shouldSendProxy = "send-proxy" %}
+{% elif PROXY_PROTOCOL_V2 | upper == "TRUE" %}
+{% set shouldSendProxy = "send-proxy-v2" %}
 {% else %}
-  {% set shouldSendProxy = "" %}
+{% set shouldSendProxy = "" %}
 {% endif %}
 
 global
