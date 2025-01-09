@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# haproxy not directly configured within /etc/haproxy/haproxy.cfg
+# Do some setup on first run (when the config file doesn't exist yet)
 if ! test -e /etc/haproxy/haproxy.cfg; then
-
-  # Generate config from env vars
-  p2 -t /haproxy.cfg.p2 >/etc/haproxy/haproxy.cfg
-
   # copy letsencrypt-cli.ini to /etc/letsencrypt/cli.ini
   cp /letsencrypt-cli.ini /etc/letsencrypt/cli.ini
 
@@ -24,12 +20,12 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
         echo "WARNING: CERTBOT_HOSTNAME is required and cannot be null or an empty string."
       else
         for hostname in $CERTBOT_HOSTNAME; do
-          echo "Queued to run in 10 seconds: certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}"
+          echo "Queued to run in 5 seconds: certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}"
 
-          # wait 10 seconds then run certbot (enough time for haproxy to startup)
-          sleep 10 && certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL} && haproxy-refresh &
-          # wait 10 seconds before queuing another certbot instance
-          sleep 10
+          # wait a bit then run certbot (enough time for haproxy to startup)
+          sleep 5 && certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL} && haproxy-refresh &
+          # wait a bit before queuing another certbot instance
+          sleep 5
           # TODO: instead of sleeping, chain all the certbot cli commands to run back to back
         done
 
@@ -43,6 +39,13 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
   fi
 
   chmod 600 /etc/crontab
+fi
+
+# Generate the haproxy config file
+if [ "$CONFIG_DISABLE" != "true" ]; then
+  p2 -t /haproxy.cfg.p2 >/etc/haproxy/haproxy.cfg
+else
+  echo "WARNING: CONFIG_DISABLE is set to true. No config file will be generated on container start."
 fi
 
 #start logging

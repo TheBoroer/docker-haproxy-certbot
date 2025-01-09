@@ -45,6 +45,7 @@ defaults
   mode http
   option httplog
   option dontlognull
+  no option http-use-htx
   
   timeout connect {{ TIMEOUT_CONNECT | default: "5s" }}
   timeout client {{ TIMEOUT_CLIENT | default: "50s" }}
