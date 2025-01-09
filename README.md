@@ -1,3 +1,5 @@
+[![Build Status](https://drone.bo.ro/api/badges/TheBoroer/docker-haproxy-certbot/status.svg)](https://drone.bo.ro/TheBoroer/docker-haproxy-certbot)
+
 # HAProxy with Certbot
 
 Docker Container with haproxy and certbot.

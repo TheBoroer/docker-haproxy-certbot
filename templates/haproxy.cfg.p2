@@ -39,6 +39,9 @@ global
   ssl-default-server-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
   ssl-default-server-options ssl-min-ver TLSv1.3 no-tls-tickets
 
+  # Workaround for Disables the announcement of the support for h2 websockets to clients.
+  h2-workaround-bogus-websocket-clients
+
   
 defaults
   log global
@@ -94,7 +97,7 @@ frontend {{ FRONTEND_NAME | default: "http-frontend" }}
   
 frontend {{ FRONTEND_NAME | default: "https-frontend" }}
   maxconn {{ FRONTEND_MAXCONN | default: "2000" }}
-  bind *:{{ FRONTEND_HTTPS_PORT | default: "443" }} ssl {{ shouldAcceptProxy }} crt /etc/ssl/certs/haproxy.pem crt /usr/local/etc/haproxy/certs.d
+  bind *:{{ FRONTEND_HTTPS_PORT | default: "443" }} ssl {{ shouldAcceptProxy }} crt /etc/ssl/certs/haproxy.pem crt /usr/local/etc/haproxy/certs.d alpn http/1.1,h2
   mode {{ FRONTEND_MODE | default: "http" }}
   http-request add-header X-Forwarded-Proto https
   
@@ -126,14 +129,13 @@ backend {{ BACKEND_NAME | default:"http-backend" }}
   
   {{ BACKEND_OPTIONS }}
   
+  # Cookies / Sticky Sessions
   {% if COOKIES_ENABLED | upper == "TRUE" %}
   cookie SRV_ID insert
   {% set cookies_config = "cookie \\\"@@value@@\\\"" %}
-  
   {% else %}
   cookie SRV_ID prefix
   {% set cookies_config = "" %}
-  
   {% endif %}
   
   # List all provided backends
@@ -141,9 +143,9 @@ backend {{ BACKEND_NAME | default:"http-backend" }}
   {% for backendServer in backendServers %}
   {% if backendServer != "" %}
   {% if COOKIES_ENABLED | upper == "TRUE" %}
-  server {{backendServer}} {{backendServer}} cookie "{{backendServer}}" check {{ shouldSendProxy }} resolvers mydns init-addr none
+  server {{backendServer}} {{backendServer}} alpn http/1.1 ws h1 cookie "{{backendServer}}" check {{ shouldSendProxy }} resolvers mydns init-addr none
   {% else %}
-  server {{backendServer}} {{backendServer}} check {{ shouldSendProxy }} resolvers mydns init-addr none
+  server {{backendServer}} {{backendServer}} alpn http/1.1 ws h1 check {{ shouldSendProxy }} resolvers mydns init-addr none
   {% endif %}
   {% endif %}
   {% endfor %}

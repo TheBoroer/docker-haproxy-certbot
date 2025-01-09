@@ -43,6 +43,7 @@ fi
 
 # Generate the haproxy config file
 if [ "$CONFIG_DISABLE" != "true" ]; then
+  echo "Generating haproxy config file..."
   p2 -t /haproxy.cfg.p2 >/etc/haproxy/haproxy.cfg
 else
   echo "WARNING: CONFIG_DISABLE is set to true. No config file will be generated on container start."
@@ -54,4 +55,5 @@ service rsyslog restart
 #start crontab
 service cron restart
 
+echo "Starting haproxy..."
 exec /haproxy-entrypoint.sh "$@"

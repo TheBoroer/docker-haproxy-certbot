@@ -99,8 +99,8 @@ RUN set -eux; \
 # "graceful stop is triggered when the SIGUSR1 signal is sent to the haproxy process"
 STOPSIGNAL SIGUSR1
 
-COPY docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["docker-entrypoint.sh"]
+COPY haproxy-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["haproxy-entrypoint.sh"]
 
 USER haproxy
 
@@ -138,7 +138,7 @@ RUN apt-get clean \
     && sed -i '/#$UDPServerRun/c\$UDPServerRun 514'  /etc/rsyslog.conf \
     && sed -i '/$UDPServerRun 514/a $UDPServerAddress 127.0.0.1' /etc/rsyslog.conf \
     && sed -i '/cron.*/a local2.*                          \/proc\/1\/fd\/1' /etc/rsyslog.conf \
-    && mv /usr/local/bin/docker-entrypoint.sh /haproxy-entrypoint.sh
+    && mv /usr/local/bin/haproxy-entrypoint.sh /haproxy-entrypoint.sh
 
 # SSL Combined self-signed default haproxy cert
 RUN touch /etc/ssl/certs/haproxy.pem
@@ -169,18 +169,19 @@ COPY scripts/haproxy-restart.sh /usr/local/bin/haproxy-restart
 COPY scripts/certbot-certonly.sh /usr/local/bin/certbot-certonly
 COPY scripts/certbot-renew.sh /usr/local/bin/certbot-renew
 
-# Fix script permissions
-RUN chmod +x /usr/local/bin/haproxy-refresh \
-    /usr/local/bin/haproxy-restart \
-    /usr/local/bin/certbot-certonly \
-    /usr/local/bin/certbot-renew
-
 # Copy templates
 COPY templates/haproxy.cfg.p2 /
 
 # Add startup script
 COPY docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
+
+# Fix permissions
+RUN chmod +x /usr/local/bin/haproxy-refresh \
+    /usr/local/bin/haproxy-restart \
+    /usr/local/bin/certbot-certonly \
+    /usr/local/bin/certbot-renew \
+    /haproxy-entrypoint.sh \
+    /docker-entrypoint.sh
 
 WORKDIR /
 ENTRYPOINT ["/docker-entrypoint.sh"]
