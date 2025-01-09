@@ -1,5 +1,6 @@
 #
-# TEMPLATED CONFIGURATION FILE. UPDATED ON EACH RUN.
+# TEMPLATED CONFIGURATION FILE
+# ONLY GENERATED ON CONTAINER CREATION
 #
 
 {% set shouldAcceptProxy = "" %}
@@ -14,8 +15,6 @@ global
   pidfile /run/haproxy.pid
   ulimit-n 1000000
   maxconn 100000
-  nbproc 1
-  nbthread 4
   
   stats socket /var/run/haproxy mode 600 level admin
   
@@ -27,21 +26,17 @@ global
   tune.ssl.maxrecord 16384
   tune.ssl.default-dh-param 2048
 
-  # generated 2025-01-08, Mozilla Guideline v5.7, HAProxy 2.2, OpenSSL 1.1.1 (UNSUPPORTED; end-of-life), modern config, no HSTS
-  # https://ssl-config.mozilla.org/#server=haproxy&version=2.2&config=modern&openssl=1.1.1&hsts=false&guideline=5.7
-  ssl-default-bind-ciphers TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384
-  ssl-default-bind-options no-sslv3 no-tlsv10 no-tlsv11 no-tls-tickets
-  ssl-default-server-ciphers TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384
-  ssl-default-server-options no-sslv3 no-tlsv10 no-tlsv11 no-tls-tickets
-  
-  # fast and secure tls 1.3/1.2 ciphers from chatgpt
-  #ssl-default-bind-ciphers   TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305
-  #ssl-default-bind-options   no-sslv3 no-tlsv10 no-tlsv11 no-tls-tickets
-  #ssl-default-server-ciphers TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305
-  #ssl-default-server-options no-sslv3 no-tlsv10 no-tlsv11 no-tls-tickets
+  # generated 2025-01-09, Mozilla Guideline v5.7, HAProxy 2.9, OpenSSL 3.0.15, modern config, no HSTS
+  # https://ssl-config.mozilla.org/#server=haproxy&version=2.9&config=modern&openssl=3.0.15&hsts=false&guideline=5.7
+  ssl-default-bind-curves X25519:prime256v1:secp384r1
+  ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+  ssl-default-bind-options no-sslv3 ssl-min-ver TLSv1.3 no-tls-tickets
+
+  ssl-default-server-curves X25519:prime256v1:secp384r1
+  ssl-default-server-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+  ssl-default-server-options no-sslv3 ssl-min-ver TLSv1.3 no-tls-tickets
 
   
-
 defaults
   log global
   mode http
@@ -96,7 +91,7 @@ frontend {{ FRONTEND_NAME | default: "http-frontend" }}
   
 frontend {{ FRONTEND_NAME | default: "https-frontend" }}
   maxconn {{ FRONTEND_MAXCONN | default: "2000" }}
-  bind *:{{ FRONTEND_HTTPS_PORT | default: "443" }} ssl alpn h2,http/1.1 {{ shouldAcceptProxy }} crt /etc/ssl/certs/haproxy.pem crt /usr/local/etc/haproxy/certs.d
+  bind *:{{ FRONTEND_HTTPS_PORT | default: "443" }} ssl {{ shouldAcceptProxy }} crt /etc/ssl/certs/haproxy.pem crt /usr/local/etc/haproxy/certs.d
   mode {{ FRONTEND_MODE | default: "http" }}
   http-request add-header X-Forwarded-Proto https
   
