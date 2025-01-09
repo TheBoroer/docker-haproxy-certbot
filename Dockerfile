@@ -13,6 +13,7 @@ RUN apt-get update \
     iptables \
     socat \
     nano \
+    orphan-sysvinit-scripts \
     rsyslog \
     wget
 
