@@ -26,8 +26,9 @@ global
   tune.ssl.maxrecord 16384
   tune.ssl.default-dh-param 2048
 
-  # generated 2025-01-09, Mozilla Guideline v5.7, HAProxy 2.9, OpenSSL 3.0.15, modern config, no HSTS
-  # https://ssl-config.mozilla.org/#server=haproxy&version=2.9&config=modern&openssl=3.0.15&hsts=false&guideline=5.7
+  # generated using:
+  # https://ssl-config.mozilla.org/#server=haproxy&config=modern&hsts=false&guideline=5.7
+  
   ssl-default-bind-curves X25519:prime256v1:secp384r1
   ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
   ssl-default-bind-options no-sslv3 ssl-min-ver TLSv1.3 no-tls-tickets
@@ -91,7 +92,7 @@ frontend {{ FRONTEND_NAME | default: "http-frontend" }}
   
 frontend {{ FRONTEND_NAME | default: "https-frontend" }}
   maxconn {{ FRONTEND_MAXCONN | default: "2000" }}
-  bind *:{{ FRONTEND_HTTPS_PORT | default: "443" }} ssl {{ shouldAcceptProxy }} crt /etc/ssl/certs/haproxy.pem crt /usr/local/etc/haproxy/certs.d
+  bind *:{{ FRONTEND_HTTPS_PORT | default: "443" }} ssl {{ shouldAcceptProxy }} crt /etc/ssl/certs/haproxy.pem crt /usr/local/etc/haproxy/certs.d alpn h2,http/1.1
   mode {{ FRONTEND_MODE | default: "http" }}
   http-request add-header X-Forwarded-Proto https
   
