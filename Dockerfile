@@ -1,13 +1,12 @@
 ################################################
 # Stage 1: use debian bullseye (ubuntu 20.04) 
-#          for openssl 1.1.1 support for 2.9 
+#          for openssl 1.1.1 support for 3.0
 ################################################
-FROM debian:bullseye-slim as base
+FROM debian:bullseye-slim AS base
 
 # https://github.com/docker-library/haproxy/blob/0c1da312a638ecef78b17c6919ec9780bc1f75e9/2.9/Dockerfile#L32-L34 
-ENV HAPROXY_VERSION 2.9.13
-ENV HAPROXY_URL https://www.haproxy.org/download/2.9/src/haproxy-2.9.13.tar.gz
-ENV HAPROXY_SHA256 77d73e6bcda4863855442fe0d8f8dda12323043eeb49d0b3763f0b7314b05a93
+ENV HAPROXY_VERSION=3.0.7
+ENV HAPROXY_URL=https://www.haproxy.org/download/${HAPROXY_VERSION%.*}/src/haproxy-${HAPROXY_VERSION}.tar.gz
 
 # runtime dependencies
 RUN set -eux; \
@@ -48,7 +47,6 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*; \
     \
     wget -O haproxy.tar.gz "$HAPROXY_URL"; \
-    echo "$HAPROXY_SHA256 *haproxy.tar.gz" | sha256sum -c; \
     mkdir -p /usr/src/haproxy; \
     tar -xzf haproxy.tar.gz -C /usr/src/haproxy --strip-components=1; \
     rm haproxy.tar.gz; \

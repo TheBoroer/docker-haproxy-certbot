@@ -12,7 +12,7 @@ steps:
         from_secret: dockerhub_password
       repo: boro/haproxy-certbot
       tags:
-        - ${DRONE_BRANCH}
+        - "${DRONE_BRANCH}"
       cache_from:
         - "boro/haproxy-certbot:${DRONE_BRANCH}"
 
