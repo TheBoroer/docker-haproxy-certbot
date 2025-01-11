@@ -5,7 +5,7 @@
 FROM debian:bullseye-slim AS base
 
 # https://github.com/docker-library/haproxy/blob/0c1da312a638ecef78b17c6919ec9780bc1f75e9/2.9/Dockerfile#L32-L34 
-ENV HAPROXY_VERSION=3.0.7
+ENV HAPROXY_VERSION=3.1.2
 ENV HAPROXY_URL=https://www.haproxy.org/download/${HAPROXY_VERSION%.*}/src/haproxy-${HAPROXY_VERSION}.tar.gz
 
 # runtime dependencies
