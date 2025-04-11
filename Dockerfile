@@ -5,8 +5,8 @@
 FROM debian:bullseye-slim AS base
 
 # https://github.com/docker-library/haproxy/blob/0c1da312a638ecef78b17c6919ec9780bc1f75e9/2.9/Dockerfile#L32-L34 
-ENV HAPROXY_VERSION=3.0.7
-ENV HAPROXY_URL=https://www.haproxy.org/download/${HAPROXY_VERSION%.*}/src/haproxy-${HAPROXY_VERSION}.tar.gz
+ENV HAPROXY_VERSION=3.0.9
+# ENV HAPROXY_URL=https://www.haproxy.org/download/${HAPROXY_VERSION%.*}/src/haproxy-${HAPROXY_VERSION}.tar.gz
 
 # runtime dependencies
 RUN set -eux; \
@@ -46,7 +46,7 @@ RUN set -eux; \
     ; \
     rm -rf /var/lib/apt/lists/*; \
     \
-    wget -O haproxy.tar.gz "$HAPROXY_URL"; \
+    wget -O haproxy.tar.gz "https://www.haproxy.org/download/${HAPROXY_VERSION%.*}/src/haproxy-${HAPROXY_VERSION}.tar.gz"; \
     mkdir -p /usr/src/haproxy; \
     tar -xzf haproxy.tar.gz -C /usr/src/haproxy --strip-components=1; \
     rm haproxy.tar.gz; \
