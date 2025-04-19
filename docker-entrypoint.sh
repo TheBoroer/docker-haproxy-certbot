@@ -2,9 +2,6 @@
 
 # Do some setup on first run (when the config file doesn't exist yet)
 if ! test -e /etc/haproxy/haproxy.cfg; then
-  # copy letsencrypt-cli.ini to /etc/letsencrypt/cli.ini
-  cp /letsencrypt-cli.ini /etc/letsencrypt/cli.ini
-
   # symlink libnl-3 to libnl (haproxy 2.4+ docker image issue)
   if [ ! -e /usr/lib/x86_64-linux-gnu/libnl/cli/qdisc/plug.so ] && [ -e /usr/lib/x86_64-linux-gnu/libnl-3/cli/qdisc/plug.so ]; then
     mkdir /usr/lib/x86_64-linux-gnu/libnl/
