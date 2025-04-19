@@ -25,8 +25,12 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
           index=1
           echo "Queued to run in 5 seconds: certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}"
 
-          # wait a bit then run certbot (enough time for haproxy to startup)
+          # run certbot
           sleep $((5 * index)) && certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL} && haproxy-refresh &
+
+          # run acme.sh
+          # sleep $((5 * index)) && acme.sh --issue -d ${hostname} --standalone --httpport 8080 && haproxy-refresh &
+
           # wait a bit before queuing another certbot instance
           sleep 30
           # TODO: instead of sleeping, chain all the certbot cli commands to run back to back
