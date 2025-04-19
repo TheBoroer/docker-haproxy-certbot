@@ -13,17 +13,25 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
       echo "WARNING: CERTBOT_EMAIL is required and cannot be null or empty."
 
     else
+      # acme.sh --register-account \
+      #   --server ${ACMESH_SERVER:-"letsencrypt"} \
+      #   -m ${CERTBOT_EMAIL} \
+      #   --agree-tos
+
       if [ -z "$CERTBOT_HOSTNAME" ]; then
         echo "WARNING: CERTBOT_HOSTNAME is required and cannot be null or an empty string."
       else
         for hostname in $CERTBOT_HOSTNAME; do
+          index=1
           echo "Queued to run in 5 seconds: certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}"
 
           # wait a bit then run certbot (enough time for haproxy to startup)
-          sleep 5 && certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL} && haproxy-refresh &
+          sleep $((5 * index)) && certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL} && haproxy-refresh &
           # wait a bit before queuing another certbot instance
-          sleep 5
+          sleep 30
           # TODO: instead of sleeping, chain all the certbot cli commands to run back to back
+
+          index=$((index + 1))
         done
 
         # Add certbot to cron

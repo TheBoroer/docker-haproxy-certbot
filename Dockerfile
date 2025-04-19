@@ -147,6 +147,9 @@ RUN wget -O /usr/local/bin/p2 \
     https://github.com/wrouesnel/p2cli/releases/download/r5/p2 && \
     chmod +x /usr/local/bin/p2
 
+# Install acme.sh
+RUN wget -O -  https://get.acme.sh | sh
+
 # Install Certbot
 RUN apt-get update \
     && apt-get install -y certbot \
