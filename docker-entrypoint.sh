@@ -42,11 +42,18 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
 fi
 
 # Generate the haproxy config file
-if [ "$CONFIG_DISABLE" != "true" ]; then
-  echo "Generating haproxy config file..."
+if [ "$CUSTOM_HAPROXY_CONFIG" != "true" ]; then
+  echo "Generating /etc/haproxy/haproxy.cfg ..."
   p2 -t /haproxy.cfg.p2 >/etc/haproxy/haproxy.cfg
 else
-  echo "WARNING: CONFIG_DISABLE is set to true. No config file will be generated on container start."
+  echo "WARNING: CUSTOM_HAPROXY_CONFIG is set to true. No haproxy.cfg file will be generated on container start."
+fi
+
+if [ "$CUSTOM_CERTBOT_CONFIG" != "true" ]; then
+  echo "Generating /etc/letsencrypt/cli.ini ..."
+  p2 -t /certbot-cli.ini.p2 >/etc/letsencrypt/cli.ini
+else
+  echo "WARNING: CUSTOM_CERTBOT_CONFIG is set to true. No cli.ini file will be generated on container start."
 fi
 
 #start logging

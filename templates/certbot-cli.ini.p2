@@ -1,0 +1,14 @@
+# Certbot Configuration File
+# Usually located at /etc/letsencrypt/cli.ini
+
+authenticator = standalone
+agree-tos = True
+http-01-port = 8080
+https-port = 8443
+non-interactive = True
+email = {{ CERTBOT_EMAIL | default: "" }}
+
+# ACME server and EAB credentials
+server = {{ ACME_SERVER | default: "https://acme-v02.api.letsencrypt.org/directory" }}
+eab-kid = {{ ACME_EAB_KID | default: "" }}
+eab-hmac-key = {{ ACME_EAB_HMAC_KEY | default: "" }}

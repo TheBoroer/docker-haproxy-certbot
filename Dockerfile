@@ -156,8 +156,6 @@ RUN apt-get update \
 # Setup Certbot
 RUN mkdir -p /etc/haproxy/certs.d
 RUN mkdir -p /etc/letsencrypt
-COPY configs/letsencrypt-cli.ini /etc/letsencrypt/cli.ini
-COPY configs/letsencrypt-cli.ini /letsencrypt-cli.ini
 COPY crons/certbot.cron /etc/cron.d/certbot
 RUN ln -s /etc/cron.d/certbot /certbot.cron
 
@@ -168,6 +166,7 @@ COPY scripts/certbot-certonly.sh /usr/local/bin/certbot-certonly
 COPY scripts/certbot-renew.sh /usr/local/bin/certbot-renew
 
 # Copy templates
+COPY templates/certbot-cli.ini.p2 /
 COPY templates/haproxy.cfg.p2 /
 
 # Add startup script
