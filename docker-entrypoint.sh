@@ -21,22 +21,28 @@ if ! test -e /etc/haproxy/haproxy.cfg; then
       if [ -z "$CERTBOT_HOSTNAME" ]; then
         echo "WARNING: CERTBOT_HOSTNAME is required and cannot be null or an empty string."
       else
+        # Build a single command string to run all certbot/acme.sh commands sequentially
+        command_string=""
+
         for hostname in $CERTBOT_HOSTNAME; do
-          index=1
-          echo "Queued to run in 5 seconds: certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}"
+          echo "Adding to command chain: certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}"
+          # echo "Adding to command chain: acme.sh --issue -d ${hostname} --standalone --httpport 8080"
 
-          # run certbot
-          sleep $((5 * index)) && certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL} && haproxy-refresh &
-
-          # run acme.sh
-          # sleep $((5 * index)) && acme.sh --issue -d ${hostname} --standalone --httpport 8080 && haproxy-refresh &
-
-          # wait a bit before queuing another certbot instance
-          sleep 30
-          # TODO: instead of sleeping, chain all the certbot cli commands to run back to back
-
-          index=$((index + 1))
+          if [ -z "$command_string" ]; then
+            command_string="certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}"
+            # command_string="acme.sh --issue -d ${hostname} --standalone --httpport 8080"
+          else
+            command_string="${command_string} && certbot-certonly --domain ${hostname} --email ${CERTBOT_EMAIL}"
+            # command_string="${command_string} && acme.sh --issue -d ${hostname} --standalone --httpport 8080"
+          fi
         done
+
+        # Add the final haproxy-refresh to the command chain
+        command_string="${command_string} && haproxy-refresh"
+
+        # Execute the full command chain
+        echo "Executing chained certbot commands..."
+        eval $command_string &
 
         # Add certbot to cron
         crontab /certbot.cron
