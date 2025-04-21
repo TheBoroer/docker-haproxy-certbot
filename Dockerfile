@@ -131,11 +131,6 @@ RUN apt-get update \
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /usr/local/etc/haproxy /etc/haproxy \
-    && sed -i '/#cron./c\cron.*                          \/proc\/1\/fd\/1'  /etc/rsyslog.conf \
-    && sed -i '/#$ModLoad imudp/c\$ModLoad imudp'  /etc/rsyslog.conf \
-    && sed -i '/#$UDPServerRun/c\$UDPServerRun 514'  /etc/rsyslog.conf \
-    && sed -i '/$UDPServerRun 514/a $UDPServerAddress 127.0.0.1' /etc/rsyslog.conf \
-    && sed -i '/cron.*/a local2.*                          \/proc\/1\/fd\/1' /etc/rsyslog.conf \
     && mv /usr/local/bin/haproxy-entrypoint.sh /haproxy-entrypoint.sh
 
 # SSL Combined self-signed default haproxy cert
@@ -167,6 +162,9 @@ COPY scripts/haproxy-refresh.sh /usr/local/bin/haproxy-refresh
 COPY scripts/haproxy-restart.sh /usr/local/bin/haproxy-restart
 COPY scripts/certbot-certonly.sh /usr/local/bin/certbot-certonly
 COPY scripts/certbot-renew.sh /usr/local/bin/certbot-renew
+
+# Setup rsyslog
+COPY ./etc/rsyslog.conf /etc/rsyslog.conf
 
 # Copy templates
 COPY templates/certbot-cli.ini.p2 /
